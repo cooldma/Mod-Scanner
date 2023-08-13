@@ -1,20 +1,20 @@
 package net.scanner.util;
 
+import net.scanner.Main;
+
 import java.io.*;
-import java.net.*;
 
 public class FolderChecker {
+    private static int suspiciousModCount = 0;
+    private static final String modrinthAPI = "https://api.modrinth.com/v2/version_file/";
+    private static final String outputFilePath = Main.downloadsFolder + "\\output.txt";
     public static void main(String[] args) {
         try {
-            String userHome = System.getProperty("user.home");
-            String downloadFolder = userHome + File.separator + "Downloads";
-            String outputFilePath = downloadFolder + File.separator + "output.txt";
             PrintStream fileStream = new PrintStream(new FileOutputStream(outputFilePath));
             System.setOut(fileStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        int modCount = 0;
         System.out.println("Mods may be flagged as suspicious due to not being on modrinth, ");
         System.out.println("This tool is only meant to narrow down suspicious mods.");
         System.out.println("----------------------------------------------------------------");
@@ -26,14 +26,14 @@ public class FolderChecker {
                     try {
                         String sha512Hash = HashUtil.calculateSHA512Hash(modFile.toPath());
 
-                        String responseData = fetch("https://api.modrinth.com/v2/version_file/" + sha512Hash + "?algorithm=sha512");
+                        String responseData = HttpsUtil.fetch(modrinthAPI + sha512Hash + "?algorithm=sha512");
                         if (!responseData.isEmpty()) {
                             if (!responseData.contains("\"id\":")) {
                                 System.out.println("Suspicious mod found: " + modFile.getAbsolutePath());
                             }
                         } else {
                             System.out.println("Suspicious mod found: " + modFile.getAbsolutePath());
-                            modCount++;
+                            suspiciousModCount++;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -45,35 +45,12 @@ public class FolderChecker {
         } else {
             System.out.println("No mods directory found.");
         }
-        if (modCount == 0) {
+        if (suspiciousModCount == 0) {
             System.out.println("No suspicious mods found within " + modsDirectory + ".");
         }
         System.out.println("----------------------------------------------------------------");
-        if (modCount != 0) {
+        if (suspiciousModCount != 0) {
             System.out.println("Use https://github.com/Col-E/Recaf to decompile them.");
-        }
-        System.exit(0);
-    }
-
-    private static String fetch(String url) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod("GET");
-            connection.setReadTimeout(5000);
-
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                return response.toString();
-            }
-        } catch (FileNotFoundException e) {
-            return "";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
         }
     }
 }
