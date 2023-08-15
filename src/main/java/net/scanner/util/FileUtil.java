@@ -8,4 +8,9 @@ public class FileUtil {
         long fileLastModified = file.lastModified();
         return (currentTime - fileLastModified) <= 24 * 60 * 60 * 1000; // modified within the past 24 hours
     }
+    public static void createDirectory(File file) {
+        if (!file.exists()) {
+            file.mkdir();
+        } else {file.delete();}
+    }
 }

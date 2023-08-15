@@ -13,13 +13,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ModList {
-    public static ArrayList modInfo = new ArrayList();
-    public static ArrayList modEntrypoints = new ArrayList();
-    public ModList() {
-        gatherInfo();
+    public static ArrayList<ModInfo> modInformation = new ArrayList<>();
+    public static void main(String[] args) throws IOException {
+        scanMods();
+        for (ModInfo modInfo : modInformation) {
+            Main.log("Mod Name: " + modInfo.name);
+            Main.log("Mod ID: " + modInfo.id);
+            Main.log("Mod Version: " + modInfo.version);
+            Main.log("Main Entrypoints: " + modInfo.mainEntrypoints);
+            Main.log("Client Entrypoints: " + modInfo.clientEntrypoints + "\n");
+        }
     }
-    private static void gatherInfo() {
-        for (File file : Path.of(Main.modsFolder).toFile().listFiles()) {
+
+    public static void scanMods() {
+        //Intellij really must want Objects.requireNonNull..
+        for (File file : Path.of(Main.UserFolder + "\\AppData\\Roaming\\.minecraft\\mods").toFile().listFiles())  {
             if (!file.getName().endsWith(".jar")) {
                 return;
             }
@@ -47,13 +55,32 @@ public class ModList {
                         } else if (clientArray != null && clientArray.length() > 0) {
                             clientEntrypoints  = clientArray.optString(0, "Unknown");
                         }
+                    } else {
+                        Main.log( modName + " contains no client or main entrypoints. (Check if it's a library or not)\n");
                     }
-                    modInfo.add(modName + " " + modId);
-                    modEntrypoints.add(modName + " main: " + mainEntrypoint + " client: " + clientEntrypoints);
+                    ModInfo modInfo = new ModInfo(modName, modId, modVersion, mainEntrypoint, clientEntrypoints);
+                    modInformation.add(modInfo);
+                } else {
+                    Main.log(file.getAbsolutePath() + " is missing fabric.mod.json.");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+    public static class ModInfo {
+        public String name;
+        public String id;
+        public String version;
+        public String mainEntrypoints;
+        public String clientEntrypoints;
+
+        public ModInfo(String name, String id, String version, String mainEntrypoints, String clientEntrypoints) {
+            this.name = name;
+            this.id = id;
+            this.version = version;
+            this.mainEntrypoints = mainEntrypoints;
+            this.clientEntrypoints = clientEntrypoints;
         }
     }
 }
