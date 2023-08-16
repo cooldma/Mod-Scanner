@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 group = 'net.scanner'
@@ -10,8 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.java.dev.jna:jna:5.13.0'
-    implementation 'net.java.dev.jna:jna-platform:5.13.0'
     implementation 'org.json:json:20230618'
 }
 
@@ -19,4 +18,9 @@ jar {
     manifest {
         attributes 'Main-Class': 'net.scanner.Main'
     }
+}
+
+shadowJar {
+    mergeServiceFiles()
+    relocate 'org.json', 'net.json.org.json'
 }
