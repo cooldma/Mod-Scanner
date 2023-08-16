@@ -14,15 +14,12 @@ import java.util.zip.ZipFile;
 
 public class ModList {
     public static ArrayList<ModInfo> modInformation = new ArrayList<>();
-    public static void main(String[] args) throws IOException {
-        scanMods();
-        for (ModInfo modInfo : modInformation) {
-            Main.log("Mod Name: " + modInfo.name);
-            Main.log("Mod ID: " + modInfo.id);
-            Main.log("Mod Version: " + modInfo.version);
-            Main.log("Main Entrypoints: " + modInfo.mainEntrypoints);
-            Main.log("Client Entrypoints: " + modInfo.clientEntrypoints + "\n");
-        }
+    public static void printModInfo(ModInfo modInfo) {
+        Main.log("Mod Name: " + modInfo.name);
+        Main.log("Mod ID: " + modInfo.id);
+        Main.log("Mod Version: " + modInfo.version);
+        Main.log("Main Entrypoints: " + modInfo.mainEntrypoints);
+        Main.log("Client Entrypoints: " + modInfo.clientEntrypoints + "\n");
     }
 
     public static void scanMods() {

@@ -8,14 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import static net.scanner.util.FileUtil.createDirectory;
-
 public class Main {
     public static final String UserFolder = System.getProperty("user.home"); //users home directory (C:\Users\%username%)
     public static File scannerFile = new File(UserFolder + "\\Downloads\\ModScannerOutput");
     public static final Kernel32 kernel32 = Native.load("kernel32", Kernel32.class);
+    public static final String mcDir = UserFolder + "\\AppData\\Roaming\\.minecraft";
     public static void main(String[] args) {
-        createDirectory(scannerFile);
+
     }
 
     public static void log(String msg) {
