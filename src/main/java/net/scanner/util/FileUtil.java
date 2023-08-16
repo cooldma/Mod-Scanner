@@ -9,9 +9,4 @@ public class FileUtil {
         }
         return false;
     }
-    public static void createDirectory(File file) {
-        if (!file.exists()) {
-            file.mkdir();
-        } else {file.delete();}
-    }
 }
