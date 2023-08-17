@@ -23,7 +23,7 @@ public class Main {
     public static String mcDir = UserFolder + "\\AppData\\Roaming\\.minecraft";
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         getMC();
-
+        System.out.println();
         System.out.println("Doomsday: " + DoomsdayDetector.recentDoomsday() + ", ! This is NOT 100% accurate !");
         System.out.println("Recently Modified Recycle Bin: " + RecycleBin.isModified());
 
