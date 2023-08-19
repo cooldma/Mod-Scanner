@@ -1,7 +1,8 @@
 package net.scanner;
 
 import net.scanner.util.TimeUtil;
-import net.scanner.util.RecycleBin;
+import org.fusesource.jansi.AnsiColors;
+import org.fusesource.jansi.AnsiConsole;
 import org.json.*;
 
 import java.io.*;
@@ -16,11 +17,12 @@ public class Main {
     public static final String UserFolder = System.getProperty("user.home");
     public static String mcDir = UserFolder + "\\AppData\\Roaming\\.minecraft";
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        getMC();
+        AnsiConsole.systemInstall();
+        getMcDirectory();
 
-        System.out.println(Green + "Directory being scanned: " + mcDir + "\n" + White);
+        System.out.println(Green + "\nScanning: " + mcDir + "\n" + White);
 
-        System.out.println("Recently Modified Recycle Bin: " + ColorBoolean(RecycleBin.isModified()) + White);
+        System.out.println("Recently Modified Recycle Bin: " + ColorBoolean(TimeUtil.isRecycleBinModified()) + White);
 
         Path scanDir = Path.of(mcDir + "\\mods");
         for (File file : scanDir.toFile().listFiles()) {
@@ -29,14 +31,14 @@ public class Main {
 
         System.out.println(listToString(Main.output, "\n"));
 
-        System.out.println(Pink + "\n! Use RECAF to decompile any flagged mods !\n" + White);
+        System.out.println(Pink + "\n! Use RECAF to decompile any flagged mods !\n" + Cyan + "https://github.com/Col-E/Recaf\n" + White);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Press enter to exit..");
         scanner.nextLine();
         System.exit(0);
     }
-    public static void getMC() {
+    public static void getMcDirectory() {
         //Check if the main .minecraft directory had a recent log modification in the past hour (to verify if that is the directory being used).
         if (!TimeUtil.isModifiedRecently(new File(mcDir + "\\logs\\latest.log"), 1)) {
             //If not were going to automatically assume that they could be using feather client,

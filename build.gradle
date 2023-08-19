@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation 'org.json:json:20230618'
+    implementation 'org.fusesource.jansi:jansi:2.4.0'
 }
 
 jar {
@@ -24,3 +25,5 @@ shadowJar {
     mergeServiceFiles()
     relocate 'org.json', 'net.json.org.json'
 }
+
+assemble.dependsOn(shadowJar)
