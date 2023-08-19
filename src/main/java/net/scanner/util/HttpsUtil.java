@@ -22,11 +22,6 @@ public class HttpsUtil {
                 }
                 return response.toString();
             }
-        } catch (FileNotFoundException e) {
-            return "";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
+        } catch (IOException e) {return "";}
     }
 }

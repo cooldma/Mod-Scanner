@@ -9,11 +9,20 @@ import java.util.List;
 
 import static net.scanner.Main.*;
 import static net.scanner.util.FolderChecker.isOnModrinth;
-import static net.scanner.util.FolderChecker.isVerified;
+import static net.scanner.util.FolderChecker.hashVerified;
 import static net.scanner.util.ModList.ModInfo.*;
 import static net.scanner.util.UnicodeDetector.containsUnicode;
 
 public class OutputUtil {
+
+    public static final String Default = "\u001B[0m";
+    public static final String Green = "\u001B[32m";
+    public static final String Red = "\u001B[31m";
+    public static final String White = "\u001B[97m";
+    public static final String Cyan = "\u001B[96m";
+    public static final String Pink = "\u001B[95m";
+    public static final String Gray = "\u001B[37m";
+
     public static String listToString(List<String> list, String separator) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
@@ -24,32 +33,30 @@ public class OutputUtil {
         }
         return sb.toString();
     }
+    public static String ColorBoolean(boolean value) {
+        if (value) {
+            return Green + "true" + Default;
+        } else {
+            return Red + "false" + Default;
+        }
+    }
     public static void scanFile(File file) throws IOException, NoSuchAlgorithmException {
         if (file.getName().endsWith(".jar")) {
             ModList.scanMods(file);
             /*
               # Feather has some type of hash checksum, so it shouldn't be possible to disguise cheats as feather (I think)
             */
-            if (!isVerified(file)) {
-                output.add("\n" + Main.Cyan + file.getAbsolutePath() + Main.Default);
+            if (!hashVerified(file)) {
+                output.add("\n" + Cyan + file.getAbsolutePath() + Default);
                 output.add(getModName(file) + " |-| " + getModId(file) + " |-| " + getVersion(file));
                 output.add("Main Entrypoints: " + Gray + getMainEntrypoints(file) + White);
                 output.add("Client Entrypoints: " + Gray + getClientEntrypoints(file) + White);
-                output.add("Contains Unicode: " + Gray + ColorBool(containsUnicode(file)) + White);
+                output.add("Contains Unicode: " + Gray + ColorBoolean(containsUnicode(file)) + White);
                 try {
-                    output.add("Modrinth Verified: " + ColorBool(isVerified(file)));
-                    output.add("Mod on Modrinth: " + ColorBool(isOnModrinth(file)));
-                } catch (IOException | NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
+                    output.add("Hash Verified: " + ColorBoolean(hashVerified(file)));
+                    output.add("Mod on Modrinth: " + ColorBoolean(isOnModrinth(file)));
+                } catch (IOException | NoSuchAlgorithmException ignored) {}
             }
-        }
-    }
-    public static String ColorBool(boolean value) {
-        if (value) {
-            return Main.Green + "true" + Main.Default;
-        } else {
-            return Main.Red + "false" + Main.Default;
         }
     }
 }

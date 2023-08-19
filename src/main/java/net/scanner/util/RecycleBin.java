@@ -7,7 +7,7 @@ public class RecycleBin {
     private static final Path recycleBin = Path.of("C:\\$Recycle.Bin");
     public static boolean isModified() {
         for (File file : recycleBin.toFile().listFiles()) {
-            if (file.lastModified() != 0 && FileUtil.isModifiedRecently(file, 24)) {
+            if (file.lastModified() != 0 && TimeUtil.isModifiedRecently(file, 24)) {
                 return true;
             }
         }

@@ -12,10 +12,10 @@ import java.util.zip.ZipFile;
 
 public class ModList {
     public static ArrayList<ModInfo> modInformation = new ArrayList<>();
-    public static ArrayList<String> noEntrypoint = new ArrayList<>();
+    public static ArrayList<String> nullEntrypoint = new ArrayList<>();
 
     public static void scanMods(File file) {
-        if (!file.getName().endsWith(".jar") || file.getName().startsWith("item-model-fix")) {
+        if (file.getName().endsWith(".jar")) {
             return;
         }
         try (ZipFile zipFile = new ZipFile(file)) {
@@ -43,7 +43,7 @@ public class ModList {
                         clientEntrypoints = clientArray.optString(0, "Unknown");
                     }
                 } else {
-                    noEntrypoint.add(modName + " contains no client or main entrypoints. (Check if it's a library or not)");
+                    nullEntrypoint.add(modName + " contains no client or main entrypoints.");
                 }
 
                 ModInfo modInfo = new ModInfo(modName, modId, modVersion, mainEntrypoint, clientEntrypoints, file.getPath());

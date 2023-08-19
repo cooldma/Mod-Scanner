@@ -4,10 +4,9 @@ import java.io.*;
 import java.security.NoSuchAlgorithmException;
 
 public class FolderChecker {
-    private static final String modrinthAPI = "https://api.modrinth.com/v2/version_file/";
-    public static boolean isVerified(File modFile) throws IOException, NoSuchAlgorithmException {
-        String sha512Hash = HashUtil.calculateSHA512Hash(modFile.toPath());
-        String hashResponseData = HttpsUtil.fetch(modrinthAPI + sha512Hash + "?algorithm=sha512");
+    public static boolean hashVerified(File modFile) throws IOException, NoSuchAlgorithmException {
+        String sha512Hash = HashUtil.calcSHA512(modFile.toPath());
+        String hashResponseData = HttpsUtil.fetch("https://api.modrinth.com/v2/version_file/" + sha512Hash + "?algorithm=sha512");
         if (hashResponseData.isEmpty()) {
             return false;
         }

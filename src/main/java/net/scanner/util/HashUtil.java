@@ -8,7 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashUtil {
-    public static String calculateSHA512Hash(Path filePath) throws IOException, NoSuchAlgorithmException {
+    public static String calcSHA512(Path filePath) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         try (InputStream inputStream = Files.newInputStream(filePath)) {
             byte[] buffer = new byte[8192];

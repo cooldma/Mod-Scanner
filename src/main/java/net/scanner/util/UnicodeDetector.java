@@ -7,7 +7,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class UnicodeDetector {
-    //this probably works but im going to test it tmr
     public static boolean containsUnicode(File file) {
         if (file.getName().endsWith(".jar")) {
             try (JarFile jarFile = new JarFile(file)) {
@@ -25,9 +24,9 @@ public class UnicodeDetector {
         return false;
     }
     private static boolean nonASCII(String input) {
-        for (int i = 0; i < input.length(); i++) { //we do this for every letter!
+        for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (c >= 128) { //apparently there is 128 total ASCII characters!
+            if (c >= 128) { //For the 128 total ASCII characters
                 return true;
             }
         }
